@@ -13,17 +13,17 @@ export class GetRegistrationsByEventUseCase {
 
   public async execute(token: string, eventId: number) {
     const user = await this.authService.getUserFromToken(token);
-
+    
     const event = await this.eventRepository.findById(eventId);
     if (!event) {
       throw { http_status: 404, message: "Event not found" };
     }
 
-    const kitchen = await this.kitchenService.getKitchenById(event.kitchenId);
+    const kitchen = await this.kitchenService.getKitchenById(event.kitchenId, token);
 
     const isKitchenOwner =
-      user.roles.includes("Admin_cocina") && kitchen.ownerId === user.id;
-
+      user.roles.includes("Admin_cocina") && Number(kitchen.ownerId) === Number(user.id);
+      
     const isRegistered = await this.registrationRepository.findUserRegistration(
       eventId,
       user.id

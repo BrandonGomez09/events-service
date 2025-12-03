@@ -8,11 +8,20 @@ export class AuthServiceAdapter implements IAuthService {
 
   async getUserFromToken(token: string): Promise<any> {
     try {
-      const response = await this.client.get("/api/v1/users/me", {
-        headers: { Authorization: token },
+
+      const cleanToken = token.replace("Bearer ", "");
+      const response = await this.client.post("/api/v1/auth/validate-token", {
+        token: cleanToken
       });
-      return response.data.data;
-    } catch {
+
+      if (!response.data.data.isValid || !response.data.data.user) {
+        throw new Error("Token invalid");
+      }
+
+      return response.data.data.user;
+      
+    } catch (error: any) {
+      console.error("Auth Service Error:", error.response?.data || error.message);
       throw { http_status: 401, message: "Invalid or expired token" };
     }
   }

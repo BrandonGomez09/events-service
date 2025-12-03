@@ -1,7 +1,6 @@
 import { IEventRepository } from "../../domain/interfaces/IEventRepository";
 import { IAuthService } from "../../domain/interfaces/IAuthService";
 import { IKitchenService } from "../../domain/interfaces/IKitchenService";
-
 import { EventUpdateValidator } from "../../domain/validators/EventUpdateValidator";
 import { Event } from "../../domain/entities/Event";
 
@@ -14,7 +13,7 @@ export class UpdateEventUseCase {
 
   public async execute(token: string, eventId: number, data: any): Promise<Event> {
     const user = await this.authService.getUserFromToken(token);
-
+    
     if (!user.roles.includes("Admin_cocina")) {
       throw { http_status: 403, message: "Only kitchen admins can update events" };
     }
@@ -24,18 +23,41 @@ export class UpdateEventUseCase {
       throw { http_status: 404, message: "Event not found" };
     }
 
-    const kitchen = await this.kitchenService.getKitchenById(existing.kitchenId);
-    if (kitchen.ownerId !== user.id) {
+    const kitchen = await this.kitchenService.getKitchenById(existing.kitchenId, token);
+    
+    if (Number(kitchen.ownerId) !== Number(user.id)) {
       throw { http_status: 403, message: "You cannot update this event" };
     }
 
-    Object.assign(existing, data);
+    const mergedData = { ...existing, ...data };
+    
+    const eventDateStr = mergedData.eventDate instanceof Date 
+      ? mergedData.eventDate.toISOString().split('T')[0] 
+      : mergedData.eventDate;
 
-    const validator = new EventUpdateValidator(existing);
+    const domainEvent = new Event(
+      mergedData.kitchenId,
+      mergedData.name,
+      mergedData.description,
+      mergedData.eventType,
+      eventDateStr,
+      mergedData.startTime,
+      mergedData.endTime,
+      mergedData.expectedDiners,
+      mergedData.maxCapacity,
+      mergedData.status,
+      mergedData.weatherCondition,
+      mergedData.createdBy,
+      mergedData.coordinatorId,
+      mergedData.closedBy,
+      mergedData.createdAt,
+      new Date(), 
+      mergedData.id
+    );
+    const validator = new EventUpdateValidator(domainEvent);
     await validator.validateWithCustomRules();
 
-    const updated = await this.eventRepository.update(eventId, existing);
-
+    const updated = await this.eventRepository.update(eventId, domainEvent);
     if (!updated) {
       throw { http_status: 500, message: "Event could not be updated" };
     }

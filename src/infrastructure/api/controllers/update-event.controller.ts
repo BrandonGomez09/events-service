@@ -14,9 +14,12 @@ export class UpdateEventController {
 
       return res.status(200).json({ success: true, data: event });
     } catch (err: any) {
+      console.error("❌ Error en UpdateEventController:", err);
+
       return res.status(err.http_status || 500).json({
         success: false,
-        message: err.message,
+        message: err.message || "An error occurred",
+        validations: err.validations || null 
       });
     }
   }

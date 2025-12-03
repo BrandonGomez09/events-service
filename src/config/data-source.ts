@@ -16,9 +16,9 @@ export const AppDataSource = new DataSource({
   synchronize: true,
   logging: false,
 
-  ssl: {
-    rejectUnauthorized: false
-  },
+  //ssl: {
+  //  rejectUnauthorized: false
+  //},
 
   entities: [
     EventSchema,
