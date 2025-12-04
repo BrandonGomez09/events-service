@@ -87,7 +87,8 @@ export const getRegistrationsByEventUseCase =
 
 export const getUserRegistrationsUseCase = new GetUserRegistrationsUseCase(
   eventRegistrationRepository,
-  authService
+  authService,
+  eventRepository 
 );
 
 export const subscribeToKitchenUseCase = new SubscribeToKitchenEventsUseCase(

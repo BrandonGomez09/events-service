@@ -13,7 +13,7 @@ export class GetRegistrationsByEventUseCase {
 
   public async execute(token: string, eventId: number) {
     const user = await this.authService.getUserFromToken(token);
-    
+
     const event = await this.eventRepository.findById(eventId);
     if (!event) {
       throw { http_status: 404, message: "Event not found" };
@@ -36,6 +36,22 @@ export class GetRegistrationsByEventUseCase {
       };
     }
 
-    return await this.registrationRepository.findByEvent(eventId);
+    const registrations = await this.registrationRepository.findByEvent(eventId);
+    const enrichedRegistrations = await Promise.all(
+      registrations.map(async (reg) => {
+        const userData = await this.authService.getUserById(reg.userId, token);
+
+        return {
+          ...reg, 
+          user: userData || { 
+            names: "Usuario Desconocido", 
+            email: "No disponible",
+            phoneNumber: ""
+          } 
+        };
+      })
+    );
+
+    return enrichedRegistrations;
   }
 }
