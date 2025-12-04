@@ -1,0 +1,9 @@
+services:
+  events-service:
+    build: .
+    container_name: events-service
+    restart: always
+    env_file:
+      - ./.env
+    ports:
+      - "4006:4006"

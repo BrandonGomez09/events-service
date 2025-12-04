@@ -15,11 +15,9 @@ export const AppDataSource = new DataSource({
   database: DatabaseConfig.database,
   synchronize: true,
   logging: false,
-
-  //ssl: {
-  //  rejectUnauthorized: false
-  //},
-
+  ssl: {
+   rejectUnauthorized: false
+  },
   entities: [
     EventSchema,
     EventRegistrationSchema,
