@@ -1,5 +1,5 @@
 export interface IKitchenService {
-  getKitchenById(kitchenId: number): Promise<{
+  getKitchenById(kitchenId: number, token?: string): Promise<{
     id: number;
     ownerId: number;
     contactEmail?: string;

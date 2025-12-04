@@ -17,12 +17,13 @@ export class CreateEventUseCase {
 
   public async execute(token: string, data: any): Promise<Event> {
     const user = await this.authService.getUserFromToken(token);
-
+    
     if (!user.roles.includes("Admin_cocina")) {
       throw { http_status: 403, message: "Only kitchen admins can create events" };
     }
 
-    const kitchen = await this.kitchenService.getKitchenById(data.kitchenId);
+    const kitchen = await this.kitchenService.getKitchenById(data.kitchenId, token);
+    
     if (kitchen.ownerId !== user.id) {
       throw { http_status: 403, message: "You cannot create events for this kitchen" };
     }
@@ -48,14 +49,13 @@ export class CreateEventUseCase {
     await validator.validateWithCustomRules();
 
     const saved = await this.eventRepository.create(event);
-
+    
     const audit = new AuditLog(
       user.id,
       "event_created",
       "event",
       saved.id! 
     );
-
     await this.auditLogRepository.log(audit);
 
     return saved;

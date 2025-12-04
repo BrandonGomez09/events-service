@@ -6,4 +6,14 @@ export interface IAuthService {
     stateId: number | null;
     municipalityId: number | null;
   }>;
+
+
+// AGREGAMOS ESTE MÉTODO:
+  getUserById(userId: number, token: string): Promise<{
+    names: string;
+    firstLastName: string;
+    secondLastName: string;
+    email: string;
+    phoneNumber: string;
+  } | null>;
 }

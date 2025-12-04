@@ -4,12 +4,19 @@ import {
   registerToEventController,
   unregisterFromEventController,
   getRegistrationsByEventController,
+  getUserRegistrationsController, 
 } from "../dependencies/dependencies";
-
 import { authMiddleware } from "../../../middleware/auth.middleware";
 import { requireRole } from "../../../middleware/role.middleware";
 
 const router = Router();
+router.get(
+  "/my-registrations",
+  authMiddleware,
+  (req, res) => getUserRegistrationsController.handle(req, res)
+);
+// ---------------------------
+
 router.post(
   "/:eventId/register",
   authMiddleware,

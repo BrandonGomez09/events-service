@@ -6,12 +6,22 @@ export class KitchenServiceAdapter implements IKitchenService {
     baseURL: process.env.KITCHEN_SERVICE_URL,
   });
 
-  async getKitchenById(id: number): Promise<any> {
+  async getKitchenById(id: number, token?: string): Promise<any> {
     try {
-      const response = await this.client.get(`/api/v1/kitchens/${id}`);
-      return response.data.data;
-    } catch {
-      throw { http_status: 404, message: "Kitchen not found" };
+      const config = token ? { headers: { Authorization: token } } : {};
+      
+      const response = await this.client.get(`/api/v1/kitchens/${id}`, config);
+      
+      const responseData = response.data.data;
+      if (responseData && responseData.kitchen) {
+        return responseData.kitchen;
+      }
+
+      return responseData;
+
+    } catch (error: any) {
+      console.error("❌ Error conectando a Kitchen Service:", error.response?.data || error.message);
+      throw { http_status: 404, message: "Kitchen not found or access denied" };
     }
   }
 }

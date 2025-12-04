@@ -11,10 +11,11 @@ import { UpdateEventUseCase } from "../../../application/use-cases/UpdateEventUs
 import { DeleteEventUseCase } from "../../../application/use-cases/DeleteEventUseCase";
 import { GetEventByIdUseCase } from "../../../application/use-cases/GetEventByIdUseCase";
 import { GetEventsByKitchenUseCase } from "../../../application/use-cases/GetEventsByKitchenUseCase";
-
 import { RegisterToEventUseCase } from "../../../application/use-cases/RegisterToEventUseCase";
 import { UnregisterFromEventUseCase } from "../../../application/use-cases/UnregisterFromEventUseCase";
 import { GetRegistrationsByEventUseCase } from "../../../application/use-cases/GetRegistrationsByEventUseCase";
+
+import { GetUserRegistrationsUseCase } from "../../../application/use-cases/GetUserRegistrationsUseCase";
 
 import { SubscribeToKitchenEventsUseCase } from "../../../application/use-cases/SubscribeToKitchenEventsUseCase";
 import { UnsubscribeFromKitchenEventsUseCase } from "../../../application/use-cases/UnsubscribeFromKitchenEventsUseCase";
@@ -30,6 +31,8 @@ import { RegisterToEventController } from "../controllers/register-to-event.cont
 import { UnregisterFromEventController } from "../controllers/unregister-from-event.controller";
 import { GetRegistrationsByEventController } from "../controllers/get-registrations-by-event.controller";
 
+import { GetUserRegistrationsController } from "../controllers/get-user-registrations.controller";
+
 import { SubscribeToKitchenController } from "../controllers/subscribe-to-kitchen.controller";
 import { UnsubscribeFromKitchenController } from "../controllers/unsubscribe-from-kitchen.controller";
 import { GetKitchenSubscriptionsController } from "../controllers/get-kitchen-subscriptions.controller";
@@ -38,7 +41,6 @@ export const eventRepository = new EventRepositoryAdapter();
 export const eventRegistrationRepository = new EventRegistrationRepositoryAdapter();
 export const eventSubscriptionRepository = new EventSubscriptionRepositoryAdapter();
 export const auditLogRepository = new AuditLogRepositoryAdapter();
-
 export const authService = new AuthServiceAdapter();
 export const kitchenService = new KitchenServiceAdapter();
 
@@ -48,22 +50,20 @@ export const createEventUseCase = new CreateEventUseCase(
   kitchenService,
   auditLogRepository
 );
-
 export const updateEventUseCase = new UpdateEventUseCase(
   eventRepository,
   authService,
   kitchenService
 );
-
 export const deleteEventUseCase = new DeleteEventUseCase(
   eventRepository,
   authService,
   kitchenService,
-  auditLogRepository
+  auditLogRepository,
+  eventRegistrationRepository
 );
 
 export const getEventByIdUseCase = new GetEventByIdUseCase(eventRepository);
-
 export const getEventsByKitchenUseCase = new GetEventsByKitchenUseCase(
   eventRepository
 );
@@ -73,12 +73,10 @@ export const registerToEventUseCase = new RegisterToEventUseCase(
   eventRegistrationRepository,
   authService
 );
-
 export const unregisterFromEventUseCase = new UnregisterFromEventUseCase(
   eventRegistrationRepository,
   authService
 );
-
 export const getRegistrationsByEventUseCase =
   new GetRegistrationsByEventUseCase(
     eventRepository,
@@ -87,17 +85,21 @@ export const getRegistrationsByEventUseCase =
     kitchenService
   );
 
+export const getUserRegistrationsUseCase = new GetUserRegistrationsUseCase(
+  eventRegistrationRepository,
+  authService,
+  eventRepository 
+);
+
 export const subscribeToKitchenUseCase = new SubscribeToKitchenEventsUseCase(
   eventSubscriptionRepository,
   authService
 );
-
 export const unsubscribeFromKitchenUseCase =
   new UnsubscribeFromKitchenEventsUseCase(
     eventSubscriptionRepository,
     authService
   );
-
 export const getKitchenSubscriptionsUseCase =
   new GetKitchenSubscriptionsUseCase(eventSubscriptionRepository);
 
@@ -106,10 +108,11 @@ export const updateEventController = new UpdateEventController(updateEventUseCas
 export const deleteEventController = new DeleteEventController(deleteEventUseCase);
 export const getEventByIdController = new GetEventByIdController(getEventByIdUseCase);
 export const getEventsByKitchenController = new GetEventsByKitchenController(getEventsByKitchenUseCase);
-
 export const registerToEventController = new RegisterToEventController(registerToEventUseCase);
 export const unregisterFromEventController = new UnregisterFromEventController(unregisterFromEventUseCase);
 export const getRegistrationsByEventController = new GetRegistrationsByEventController(getRegistrationsByEventUseCase);
+
+export const getUserRegistrationsController = new GetUserRegistrationsController(getUserRegistrationsUseCase);
 
 export const subscribeToKitchenController = new SubscribeToKitchenController(subscribeToKitchenUseCase);
 export const unsubscribeFromKitchenController = new UnsubscribeFromKitchenController(unsubscribeFromKitchenUseCase);

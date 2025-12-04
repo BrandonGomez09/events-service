@@ -7,7 +7,11 @@ export interface IEventRegistrationRepository {
 
   findByEvent(eventId: number): Promise<EventRegistration[]>;
 
+  findByUser(userId: number): Promise<EventRegistration[]>;
+
   findUserRegistration(eventId: number, userId: number): Promise<EventRegistration | null>;
 
   countByEvent(eventId: number): Promise<number>;
+
+  deleteAllByEventId(eventId: number): Promise<void>;
 }
