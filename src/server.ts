@@ -13,9 +13,9 @@ async function start() {
     await AppDataSource.initialize();
     console.log("📦 Database connected");
 
-    // RabbitMQ.connect().then(() =>
-    //   console.log("🐇 RabbitMQ connected")
-    // );
+    RabbitMQ.connect().then(() =>
+      console.log("🐇 RabbitMQ connected")
+    );
 
     app.listen(PORT, () => {
       console.log("🚀═════════════════════════════════════🚀");
