@@ -18,6 +18,7 @@ export const AppDataSource = new DataSource({
   ssl: {
    rejectUnauthorized: false
   },
+
   entities: [
     EventSchema,
     EventRegistrationSchema,

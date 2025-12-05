@@ -9,7 +9,7 @@ export class AuthServiceAdapter implements IAuthService {
   async getUserFromToken(token: string): Promise<any> {
     try {
       const cleanToken = token.replace("Bearer ", "");
-      const response = await this.client.post("/api/v1/auth/validate-token", {
+      const response = await this.client.post("/validate-token", {
         token: cleanToken
       });
 
