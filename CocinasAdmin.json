@@ -1,0 +1,135 @@
+{
+  "kitchenAdminActions": [
+    {
+      "description": "Obtener la información de MI cocina (basado en el token del usuario logueado)",
+      "method": "GET",
+      "url": "http://localhost:3000/api/v1/kitchens/me",
+      "requiresToken": true,
+      "role": "Admin_cocina",
+      "req": null,
+      "res": {
+        "success": true,
+        "data": {
+          "id": 15,
+          "name": "Cocina Comunitaria El Sol",
+          "description": "Comida caliente para todos",
+          "approvalStatus": "approved",
+          "ownerId": 5,
+          "isActive": true
+        }
+      }
+    },
+    {
+      "description": "Actualizar la información básica de mi cocina (teléfono, descripción, foto, email)",
+      "method": "PUT",
+      "url": "http://localhost:3000/api/v1/kitchens/:id",
+      "requiresToken": true,
+      "role": "Admin_cocina",
+      "req": {
+        "description": "Nueva descripción actualizada con mejores servicios",
+        "contactPhone": "9615558888",
+        "contactEmail": "contacto_actualizado@elsol.com",
+        "imageUrl": "https://ejemplo.com/nueva_imagen.jpg"
+      },
+      "res": {
+        "success": true,
+        "message": "Cocina actualizada correctamente",
+        "data": {
+          "id": 15,
+          "contactPhone": "9615558888"
+        }
+      }
+    },
+    {
+      "description": "Crear horarios de atención para la cocina",
+      "method": "POST",
+      "url": "http://localhost:3000/api/v1/kitchens/:kitchenId/schedules",
+      "requiresToken": true,
+      "role": "Admin_cocina",
+      "req": {
+        "weekdays": {
+          "startTime": "08:00",
+          "endTime": "16:00"
+        },
+        "weekend": {
+          "startTime": "09:00",
+          "endTime": "14:00"
+        }
+      },
+      "res": {
+        "success": true,
+        "message": "Horarios creados correctamente",
+        "data": [
+          { "day": "MONDAY", "startTime": "08:00", "endTime": "16:00" },
+          { "day": "SATURDAY", "startTime": "09:00", "endTime": "14:00" }
+        ]
+      }
+    },
+    {
+      "description": "Actualizar horarios de atención existentes",
+      "method": "PUT",
+      "url": "http://localhost:3000/api/v1/kitchens/:kitchenId/schedules",
+      "requiresToken": true,
+      "role": "Admin_cocina",
+      "req": {
+        "weekdays": {
+          "startTime": "07:30",
+          "endTime": "15:30"
+        },
+        "weekend": {
+          "startTime": "10:00",
+          "endTime": "13:00"
+        }
+      },
+      "res": {
+        "success": true,
+        "message": "Horarios actualizados correctamente",
+        "data": []
+      }
+    },
+    {
+      "description": "Ver lista de usuarios (voluntarios) suscritos a mi cocina",
+      "method": "GET",
+      "url": "http://localhost:3000/api/v1/kitchens/:id/subscribers",
+      "requiresToken": true,
+      "role": "Admin_cocina",
+      "req": null,
+      "res": {
+        "success": true,
+        "data": [
+          {
+            "membershipId": 101,
+            "userId": 45,
+            "joinDate": "2025-11-20T10:00:00.000Z",
+            "user": {
+              "names": "Carlos",
+              "firstLastName": "Ruiz",
+              "email": "carlos@email.com",
+              "phoneNumber": "9617778899"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "description": "Ver los horarios configurados de mi cocina",
+      "method": "GET",
+      "url": "http://localhost:3000/api/v1/kitchens/:kitchenId/schedules",
+      "requiresToken": true,
+      "role": "Admin_cocina",
+      "req": null,
+      "res": {
+        "success": true,
+        "data": [
+          {
+            "id": 5,
+            "day": "MONDAY",
+            "startTime": "08:00:00",
+            "endTime": "16:00:00",
+            "isActive": true
+          }
+        ]
+      }
+    }
+  ]
+}

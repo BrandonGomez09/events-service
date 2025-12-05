@@ -3,13 +3,13 @@ import { IAuthService } from "../../domain/interfaces/IAuthService";
 
 export class AuthServiceAdapter implements IAuthService {
   private client = axios.create({
-    baseURL: process.env.AUTH_SERVICE_URL, 
+    baseURL: (process.env.AUTH_SERVICE_URL || "").replace("/api/v1/auth", ""),
   });
 
   async getUserFromToken(token: string): Promise<any> {
     try {
       const cleanToken = token.replace("Bearer ", "");
-      const response = await this.client.post("/validate-token", {
+      const response = await this.client.post("/api/v1/auth/validate-token", {
         token: cleanToken
       });
 
