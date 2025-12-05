@@ -10,7 +10,7 @@ export class KitchenServiceAdapter implements IKitchenService {
     try {
       const config = token ? { headers: { Authorization: token } } : {};
       
-      const response = await this.client.get(`/api/v1/kitchens/${id}`, config);
+      const response = await this.client.get(`/${id}`, config);
       
       const responseData = response.data.data;
       if (responseData && responseData.kitchen) {
